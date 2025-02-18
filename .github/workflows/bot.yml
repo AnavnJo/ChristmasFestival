@@ -1,30 +1,15 @@
-name: Run Discord Bot
+import os
+import discord
 
-on:
-  push:
-    branches:
-      - main  # Esegui il bot quando fai un push nel branch 'main'
+# Recupera il token dal secret
+token = os.getenv('DISCORD_TOKEN')
 
-jobs:
-  build:
-    runs-on: ubuntu-latest  # Usa una macchina virtuale con Ubuntu per eseguire il bot
+# Crea una connessione al client di Discord
+client = discord.Client()
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2  # Scarica il codice del repository
+@client.event
+async def on_ready():
+    print(f'Logged in as {client.user}')
 
-      - name: Unzip bot code
-        run: |
-          mkdir bot_folder  # Crea una cartella per il codice
-          unzip bot_code.zip -d bot_folder  # Estrai il file ZIP nella cartella 'bot_folder'
-
-      - name: Install dependencies
-        run: |
-          cd bot_folder  # Vai nella cartella dove è stato estratto il codice
-          python -m pip install --upgrade pip  # Aggiorna pip
-          pip install -r requirements.txt  # Installa le dipendenze del bot (se hai un file 'requirements.txt')
-
-      - name: Run bot
-        run: |
-          cd bot_folder  # Vai nella cartella dove è stato estratto il codice
-          python bot.py  # Esegui il bot (sostituisci con il nome del file che avvia il bot)
+# Esegui il bot con il token
+client.run(token)
