@@ -1,0 +1,28 @@
+name: Run Discord Bot
+
+on:
+  push:
+    branches:
+      - main  # Questo eseguirà il bot quando fai push sul ramo "main"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # Usa un ambiente Linux per eseguire il bot
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2  # Esegui il checkout del codice
+
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Imposta la versione di Python
+        with:
+          python-version: '3.8'  # Usa la versione di Python che vuoi (3.8 è un esempio)
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Installa le dipendenze
+
+      - name: Run bot
+        env:
+          DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}  # Usa il token salvato come secret
+        run: python bot.py  # Esegui il bot con il comando python
